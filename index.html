@@ -33,7 +33,7 @@ const audioFiles = [
   "audio4.wav"
 ];
 
-// OPTIONAL RANDOMIZATION
+// RANDOMIZE ORDER
 audioFiles.sort(() => Math.random() - 0.5);
 
 // ======================================
@@ -73,12 +73,6 @@ audioFiles.forEach((file, index) => {
 
     <span id="value_${index}">5</span>
 
-    <br><br>
-
-    <label>Optional comment:</label><br>
-
-    <textarea id="comment_${index}"></textarea>
-
     <hr>
 
   `;
@@ -106,11 +100,6 @@ async function submitTest() {
         `rating_${index}`
       ).value;
 
-    const comment =
-      document.getElementById(
-        `comment_${index}`
-      ).value;
-
     responses[`Audio_${index+1}_RATING`] = {
       answer: rating,
       chiave: file
@@ -120,15 +109,6 @@ async function submitTest() {
       answer: file,
       chiave: "file"
     };
-
-    if(comment) {
-
-      responses[`Audio_${index+1}_COMMENT`] = {
-        answer: comment,
-        chiave: "comment"
-      };
-
-    }
 
   });
 
@@ -169,4 +149,5 @@ async function submitTest() {
 
 }
 
+</script>
 </script>
