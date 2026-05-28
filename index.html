@@ -1,0 +1,172 @@
+<label>Your ID:</label>
+<input type="text" id="participant" placeholder="user001">
+
+<hr>
+
+<h2>Audio Rating Test</h2>
+
+<p>
+Listen to each excerpt and rate it from 0 to 10.
+</p>
+
+<div id="testContainer"></div>
+
+<hr>
+
+<label>Optional global comment:</label><br>
+<textarea id="globalComment"></textarea>
+
+<hr>
+
+<button onclick="submitTest()">Submit</button>
+
+<script>
+
+// ======================================
+// AUDIO FILES
+// ======================================
+
+const audioFiles = [
+  "audio1.wav",
+  "audio2.wav",
+  "audio3.wav",
+  "audio4.wav"
+];
+
+// OPTIONAL RANDOMIZATION
+audioFiles.sort(() => Math.random() - 0.5);
+
+// ======================================
+// CREATE TEST INTERFACE
+// ======================================
+
+const container =
+  document.getElementById("testContainer");
+
+audioFiles.forEach((file, index) => {
+
+  container.innerHTML += `
+
+    <h3>Audio ${index + 1}</h3>
+
+    <audio controls>
+      <source src="${file}" type="audio/wav">
+    </audio>
+
+    <br><br>
+
+    <label>Score (0–10):</label>
+
+    <input
+      type="range"
+      min="0"
+      max="10"
+      step="1"
+      value="5"
+      id="rating_${index}"
+      oninput="
+        document.getElementById(
+          'value_${index}'
+        ).innerText = this.value
+      "
+    >
+
+    <span id="value_${index}">5</span>
+
+    <br><br>
+
+    <label>Optional comment:</label><br>
+
+    <textarea id="comment_${index}"></textarea>
+
+    <hr>
+
+  `;
+
+});
+
+// ======================================
+// SUBMIT
+// ======================================
+
+async function submitTest() {
+
+  const participant =
+    document.getElementById("participant").value;
+
+  const globalComment =
+    document.getElementById("globalComment").value;
+
+  const responses = {};
+
+  audioFiles.forEach((file, index) => {
+
+    const rating =
+      document.getElementById(
+        `rating_${index}`
+      ).value;
+
+    const comment =
+      document.getElementById(
+        `comment_${index}`
+      ).value;
+
+    responses[`Audio_${index+1}_RATING`] = {
+      answer: rating,
+      chiave: file
+    };
+
+    responses[`Audio_${index+1}_FILE`] = {
+      answer: file,
+      chiave: "file"
+    };
+
+    if(comment) {
+
+      responses[`Audio_${index+1}_COMMENT`] = {
+        answer: comment,
+        chiave: "comment"
+      };
+
+    }
+
+  });
+
+  if(globalComment) {
+
+    responses["GLOBAL_COMMENT"] = {
+      answer: globalComment,
+      chiave: "global"
+    };
+
+  }
+
+  try {
+
+    await fetch(
+      "https://script.google.com/macros/s/AKfycbxZcnmbUs3bwtbBTu-e2Fw8ONPd6cBFNj5tUmCtEh7Og9pAZWzBxbYjG34Gmn_AsJpi/exec",
+      {
+        method: "POST",
+
+        mode: "no-cors",
+
+        body: new URLSearchParams({
+          participant: participant,
+          responses: JSON.stringify(responses)
+        })
+      }
+    );
+
+    alert("Responses sent!");
+
+  } catch(error) {
+
+    console.error(error);
+
+    alert("FETCH ERROR");
+
+  }
+
+}
+
+</script>
