@@ -51,9 +51,9 @@ audioFiles.forEach((file, index) => {
 
     <h3>Audio ${index + 1}</h3>
 
-    <audio controls>
-      <source src="${file}" type="audio/wav">
-    </audio>
+    <audio controls controlsList="nodownload noplaybackrate noremoteplayback">
+  <source src="${file}" type="audio/wav">
+</audio>
 
     <br><br>
 
