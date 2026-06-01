@@ -11,10 +11,6 @@ Listen to each excerpt and rate it from 0 to 10.
 
 <div id="testContainer"></div>
 
-<hr>
-
-<label>Optional global comment:</label><br>
-<textarea id="globalComment"></textarea>
 
 <hr>
 
@@ -115,9 +111,6 @@ async function submitTest() {
   const participant =
     document.getElementById("participant").value;
 
-  // GLOBAL COMMENT
-  const globalComment =
-    document.getElementById("globalComment").value;
 
   // RESPONSES OBJECT
   const responses = {};
@@ -142,15 +135,6 @@ async function submitTest() {
 
   });
 
-  // OPTIONAL GLOBAL COMMENT
-  if(globalComment) {
-
-    responses["GLOBAL_COMMENT"] = {
-      answer: globalComment,
-      chiave: "global"
-    };
-
-  }
 
   // SEND
   try {
