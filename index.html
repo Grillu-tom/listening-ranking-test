@@ -106,7 +106,6 @@ function toggleInstrument(show) {
 
   if (!show) {
     document.getElementById("yearsPractice").value = "";
-    document.getElementById("hoursPractice").value = "";
   }
 
   validateIntro();
@@ -126,7 +125,6 @@ function validateIntro() {
 
   const years = document.getElementById("yearsPractice").value;
 
-  const hours = document.getElementById("hoursPractice").value;
 
   let valid = true;
 
@@ -135,7 +133,7 @@ function validateIntro() {
   if (!musician) valid = false;
 
   if (musician?.value === "Yes") {
-    if (!years || !hours) valid = false;
+    if (!years) valid = false;
   }
 
   document.getElementById("startBtn").disabled = !valid;
@@ -153,7 +151,7 @@ document.querySelectorAll('input[name="musician"]').forEach(el =>
 );
 
 document.getElementById("yearsPractice").addEventListener("input", validateIntro);
-document.getElementById("hoursPractice").addEventListener("input", validateIntro);
+
 
 // =========================
 // AUDIO FILES
@@ -241,16 +239,12 @@ async function submitTest() {
   const yearsPractice =
     document.getElementById("yearsPractice")?.value || "";
 
-  const hoursPractice =
-    document.getElementById("hoursPractice")?.value || "";
-
   const responses = {
 
     AGE: { answer: age, chiave: "demographics" },
     DEVICE: { answer: device, chiave: "demographics" },
     MUSICIAN: { answer: musician, chiave: "demographics" },
     YEARS_PRACTICE: { answer: yearsPractice, chiave: "demographics" },
-    HOURS_PRACTICE: { answer: hoursPractice, chiave: "demographics" }
 
   };
 
