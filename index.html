@@ -2,9 +2,7 @@
 
   <h1>Audio Rating Test</h1>
 
-  <p>
-    Thank you for participating in this listening experiment.
-  </p>
+  <p>Thank you for participating in this listening experiment.</p>
 
   <p>
     You will listen to several audio excerpts and rate each one
@@ -18,9 +16,49 @@
     <li>There are no right or wrong answers.</li>
   </ul>
 
-  <p>
-    The test takes approximately 2–3 minutes.
-  </p>
+  <hr>
+
+  <h3>Participant information</h3>
+
+  <label>Age:</label><br>
+  <input type="number" id="age" min="0" max="120">
+
+  <br><br>
+
+  <label>Listening device:</label><br>
+
+  <label>
+    <input type="radio" name="device" value="Headphones">
+    Headphones
+  </label>
+
+  <label>
+    <input type="radio" name="device" value="Speakers">
+    Speakers
+  </label>
+
+  <br><br>
+
+  <label>Do you play a musical instrument?</label><br>
+
+  <label>
+    <input type="radio" name="musician" value="Yes" onchange="toggleYears(true)">
+    Yes
+  </label>
+
+  <label>
+    <input type="radio" name="musician" value="No" onchange="toggleYears(false)">
+    No
+  </label>
+
+  <br><br>
+
+  <div id="yearsContainer" style="display:none;">
+    <label>How many years?</label><br>
+    <input type="number" id="yearsPractice" min="0" max="100">
+  </div>
+
+  <br>
 
   <button onclick="startTest()">
     Start Test
@@ -29,41 +67,46 @@
 </div>
 
 <div id="testPage" style="display:none;">
-<label>Your ID:</label>
-<input type="text" id="participant" placeholder="user001">
 
-<hr>
+  <label>Your ID:</label>
+  <input type="text" id="participant" placeholder="user001">
 
-<h2>Audio Rating Test</h2>
+  <hr>
 
-<p>
-Listen to each excerpt and rate it from 0 to 10.
-</p>
+  <h2>Audio Rating Test</h2>
 
-<div id="testContainer"></div>
+  <p>Listen to each excerpt and rate it from 0 to 10.</p>
 
+  <div id="testContainer"></div>
 
-<hr>
+  <hr>
 
-<button id="submitButton" onclick="submitTest()">
-  Submit
-</button>
+  <button id="submitButton" onclick="submitTest()">
+    Submit
+  </button>
 
 </div>
 
 <script>
 
-// ======================================
-// AUDIO FILES
-// ======================================
+// =========================
+// INTRO LOGIC
+// =========================
 
 function startTest() {
-
   document.getElementById("introPage").style.display = "none";
-
   document.getElementById("testPage").style.display = "block";
-
 }
+
+function toggleYears(show) {
+  document.getElementById("yearsContainer").style.display =
+    show ? "block" : "none";
+}
+
+// =========================
+// AUDIO FILES
+// =========================
+
 const audioFiles = [
   "audio1.wav",
   "audio2.wav",
@@ -71,15 +114,13 @@ const audioFiles = [
   "audio4.wav"
 ];
 
-// RANDOMIZE ORDER
 audioFiles.sort(() => Math.random() - 0.5);
 
-// ======================================
-// CREATE TEST INTERFACE
-// ======================================
+// =========================
+// BUILD UI
+// =========================
 
-const container =
-  document.getElementById("testContainer");
+const container = document.getElementById("testContainer");
 
 audioFiles.forEach((file, index) => {
 
@@ -91,9 +132,7 @@ audioFiles.forEach((file, index) => {
       <source src="${file}" type="audio/wav">
     </audio>
 
-    <button
-      type="button"
-      onclick="playAudio('audio_${index}')">
+    <button type="button" onclick="playAudio('audio_${index}')">
       ▶ Listen
     </button>
 
@@ -109,9 +148,7 @@ audioFiles.forEach((file, index) => {
       value="5"
       id="rating_${index}"
       oninput="
-        document.getElementById(
-          'value_${index}'
-        ).innerText = this.value
+        document.getElementById('value_${index}').innerText = this.value
       "
     >
 
@@ -120,48 +157,64 @@ audioFiles.forEach((file, index) => {
     <hr>
 
   `;
-
 });
 
 function playAudio(audioId) {
-
-  const audio =
-    document.getElementById(audioId);
-
+  const audio = document.getElementById(audioId);
   audio.currentTime = 0;
-
   audio.play();
-
 }
-// ======================================
+
+// =========================
 // SUBMIT
-// ======================================
+// =========================
 
 async function submitTest() {
 
-  // BUTTON CONTROL
-  const button =
-    document.getElementById("submitButton");
-
+  const button = document.getElementById("submitButton");
   button.disabled = true;
-
   button.innerText = "Sending...";
 
-  // PARTICIPANT
-  const participant =
-    document.getElementById("participant").value;
+  const participant = document.getElementById("participant").value;
 
+  // DEMOGRAPHICS
+  const age = document.getElementById("age").value;
 
-  // RESPONSES OBJECT
-  const responses = {};
+  const device = document.querySelector('input[name="device"]:checked')?.value || "";
 
-  // SAVE RATINGS
+  const musician = document.querySelector('input[name="musician"]:checked')?.value || "";
+
+  const yearsPractice =
+    document.getElementById("yearsPractice")?.value || "";
+
+  const responses = {
+
+    AGE: {
+      answer: age,
+      chiave: "demographics"
+    },
+
+    DEVICE: {
+      answer: device,
+      chiave: "demographics"
+    },
+
+    MUSICIAN: {
+      answer: musician,
+      chiave: "demographics"
+    },
+
+    YEARS_PRACTICE: {
+      answer: yearsPractice,
+      chiave: "demographics"
+    }
+
+  };
+
+  // RATINGS
   audioFiles.forEach((file, index) => {
 
-    const rating =
-      document.getElementById(
-        `rating_${index}`
-      ).value;
+    const rating = document.getElementById(`rating_${index}`).value;
 
     responses[`Audio_${index+1}_RATING`] = {
       answer: rating,
@@ -175,17 +228,13 @@ async function submitTest() {
 
   });
 
-
-  // SEND
   try {
 
     await fetch(
       "https://script.google.com/macros/s/AKfycbw0ujovUVd5YtHgAq0IDfBEgjE6WpffuW9IBtuCD6hMslQb3YqQB1PyYOotThXyp_fWWw/exec",
       {
         method: "POST",
-
         mode: "no-cors",
-
         body: new URLSearchParams({
           participant: participant,
           responses: JSON.stringify(responses)
@@ -194,21 +243,17 @@ async function submitTest() {
     );
 
     button.innerText = "Submitted ✓";
-
     alert("Responses sent!");
 
-  } catch(error) {
+  } catch (error) {
 
     console.error(error);
 
     button.disabled = false;
-
     button.innerText = "Submit";
 
     alert("FETCH ERROR");
-
   }
-
 }
 
 </script>
