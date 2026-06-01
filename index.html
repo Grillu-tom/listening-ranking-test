@@ -1,3 +1,34 @@
+<div id="introPage">
+
+  <h1>Audio Rating Test</h1>
+
+  <p>
+    Thank you for participating in this listening experiment.
+  </p>
+
+  <p>
+    You will listen to several audio excerpts and rate each one
+    on a scale from 0 to 10.
+  </p>
+
+  <ul>
+    <li>Use headphones if possible.</li>
+    <li>Listen in a quiet environment.</li>
+    <li>You may replay the excerpts as many times as needed.</li>
+    <li>There are no right or wrong answers.</li>
+  </ul>
+
+  <p>
+    The test takes approximately 2–3 minutes.
+  </p>
+
+  <button onclick="startTest()">
+    Start Test
+  </button>
+
+</div>
+
+<div id="testPage" style="display:none;">
 <label>Your ID:</label>
 <input type="text" id="participant" placeholder="user001">
 
@@ -18,12 +49,21 @@ Listen to each excerpt and rate it from 0 to 10.
   Submit
 </button>
 
+</div>
+
 <script>
 
 // ======================================
 // AUDIO FILES
 // ======================================
 
+function startTest() {
+
+  document.getElementById("introPage").style.display = "none";
+
+  document.getElementById("testPage").style.display = "block";
+
+}
 const audioFiles = [
   "audio1.wav",
   "audio2.wav",
