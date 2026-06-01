@@ -42,25 +42,32 @@
   <label>Do you play a musical instrument?</label><br>
 
   <label>
-    <input type="radio" name="musician" value="Yes" onchange="toggleYears(true)">
+    <input type="radio" name="musician" value="Yes" onchange="toggleInstrument(true)">
     Yes
   </label>
 
   <label>
-    <input type="radio" name="musician" value="No" onchange="toggleYears(false)">
+    <input type="radio" name="musician" value="No" onchange="toggleInstrument(false)">
     No
   </label>
 
   <br><br>
 
-  <div id="yearsContainer" style="display:none;">
+  <div id="instrumentDetails" style="display:none;">
+
     <label>How many years?</label><br>
     <input type="number" id="yearsPractice" min="0" max="100">
+
+    <br><br>
+
+    <label>How many hours per week?</label><br>
+    <input type="number" id="hoursPractice" min="0" max="168">
+
   </div>
 
   <br>
 
-  <button onclick="startTest()">
+  <button id="startBtn" onclick="startTest()" disabled>
     Start Test
   </button>
 
@@ -98,10 +105,60 @@ function startTest() {
   document.getElementById("testPage").style.display = "block";
 }
 
-function toggleYears(show) {
-  document.getElementById("yearsContainer").style.display =
+function toggleInstrument(show) {
+  document.getElementById("instrumentDetails").style.display =
     show ? "block" : "none";
+
+  if (!show) {
+    document.getElementById("yearsPractice").value = "";
+    document.getElementById("hoursPractice").value = "";
+  }
+
+  validateIntro();
 }
+
+// =========================
+// VALIDATION (IMPORTANT)
+// =========================
+
+function validateIntro() {
+
+  const age = document.getElementById("age").value;
+
+  const device = document.querySelector('input[name="device"]:checked');
+
+  const musician = document.querySelector('input[name="musician"]:checked');
+
+  const years = document.getElementById("yearsPractice").value;
+
+  const hours = document.getElementById("hoursPractice").value;
+
+  let valid = true;
+
+  if (!age) valid = false;
+  if (!device) valid = false;
+  if (!musician) valid = false;
+
+  if (musician?.value === "Yes") {
+    if (!years || !hours) valid = false;
+  }
+
+  document.getElementById("startBtn").disabled = !valid;
+}
+
+// live validation
+document.getElementById("age").addEventListener("input", validateIntro);
+
+document.querySelectorAll('input[name="device"]').forEach(el =>
+  el.addEventListener("change", validateIntro)
+);
+
+document.querySelectorAll('input[name="musician"]').forEach(el =>
+  el.addEventListener("change", validateIntro)
+);
+
+document.getElementById("yearsPractice").addEventListener("input", validateIntro);
+document.getElementById("hoursPractice").addEventListener("input", validateIntro);
 
 // =========================
 // AUDIO FILES
@@ -180,41 +237,33 @@ async function submitTest() {
   // DEMOGRAPHICS
   const age = document.getElementById("age").value;
 
-  const device = document.querySelector('input[name="device"]:checked')?.value || "";
+  const device =
+    document.querySelector('input[name="device"]:checked')?.value || "";
 
-  const musician = document.querySelector('input[name="musician"]:checked')?.value || "";
+  const musician =
+    document.querySelector('input[name="musician"]:checked')?.value || "";
 
   const yearsPractice =
     document.getElementById("yearsPractice")?.value || "";
 
+  const hoursPractice =
+    document.getElementById("hoursPractice")?.value || "";
+
   const responses = {
 
-    AGE: {
-      answer: age,
-      chiave: "demographics"
-    },
-
-    DEVICE: {
-      answer: device,
-      chiave: "demographics"
-    },
-
-    MUSICIAN: {
-      answer: musician,
-      chiave: "demographics"
-    },
-
-    YEARS_PRACTICE: {
-      answer: yearsPractice,
-      chiave: "demographics"
-    }
+    AGE: { answer: age, chiave: "demographics" },
+    DEVICE: { answer: device, chiave: "demographics" },
+    MUSICIAN: { answer: musician, chiave: "demographics" },
+    YEARS_PRACTICE: { answer: yearsPractice, chiave: "demographics" },
+    HOURS_PRACTICE: { answer: hoursPractice, chiave: "demographics" }
 
   };
 
   // RATINGS
   audioFiles.forEach((file, index) => {
 
-    const rating = document.getElementById(`rating_${index}`).value;
+    const rating =
+      document.getElementById(`rating_${index}`).value;
 
     responses[`Audio_${index+1}_RATING`] = {
       answer: rating,
@@ -248,7 +297,6 @@ async function submitTest() {
   } catch (error) {
 
     console.error(error);
-
     button.disabled = false;
     button.innerText = "Submit";
 
