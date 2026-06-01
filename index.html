@@ -19,7 +19,12 @@
   <hr>
 
   <h3>Participant information</h3>
-
+  <h3>Participant ID</h3>
+  
+  <label>ID:</label><br>
+  <input type="text" id="participant" placeholder="user001">
+  
+  <br><br>
   <label>Age:</label><br>
   <input type="number" id="age" min="0" max="120">
 
@@ -70,8 +75,6 @@
 
 <div id="testPage" style="display:none;">
 
-  <label>Your ID:</label>
-  <input type="text" id="participant" placeholder="user001">
 
   <hr>
 
@@ -117,6 +120,8 @@ function toggleInstrument(show) {
 
 function validateIntro() {
 
+  const participant = document.getElementById("participant").value;
+
   const age = document.getElementById("age").value;
 
   const device = document.querySelector('input[name="device"]:checked');
@@ -125,8 +130,10 @@ function validateIntro() {
 
   const years = document.getElementById("yearsPractice").value;
 
-
   let valid = true;
+
+  // ID obligatoire
+  if (!participant) valid = false;
 
   if (!age) valid = false;
   if (!device) valid = false;
