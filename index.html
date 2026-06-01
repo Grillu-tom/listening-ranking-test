@@ -19,12 +19,14 @@
   <hr>
 
   <h3>Participant information</h3>
-  <h3>Participant ID</h3>
-  
+
+  <h4>Participant ID</h4>
+
   <label>ID:</label><br>
   <input type="text" id="participant" placeholder="user001">
-  
+
   <br><br>
+
   <label>Age:</label><br>
   <input type="number" id="age" min="0" max="120">
 
@@ -75,7 +77,6 @@
 
 <div id="testPage" style="display:none;">
 
-
   <hr>
 
   <h2>Audio Rating Test</h2>
@@ -104,37 +105,38 @@ function startTest() {
 }
 
 function toggleInstrument(show) {
+
   document.getElementById("instrumentDetails").style.display =
     show ? "block" : "none";
 
   if (!show) {
-    document.getElementById("yearsPractice").value = "";
+    const y = document.getElementById("yearsPractice");
+    if (y) y.value = "";
   }
 
   validateIntro();
 }
 
 // =========================
-// VALIDATION (IMPORTANT)
+// VALIDATION (ROBUST)
 // =========================
 
 function validateIntro() {
 
-  const participant = document.getElementById("participant").value;
+  const participantEl = document.getElementById("participant");
+  const ageEl = document.getElementById("age");
+  const yearsEl = document.getElementById("yearsPractice");
 
-  const age = document.getElementById("age").value;
+  const participant = participantEl ? participantEl.value : "";
+  const age = ageEl ? ageEl.value : "";
+  const years = yearsEl ? yearsEl.value : "";
 
   const device = document.querySelector('input[name="device"]:checked');
-
   const musician = document.querySelector('input[name="musician"]:checked');
-
-  const years = document.getElementById("yearsPractice").value;
 
   let valid = true;
 
-  // ID obligatoire
   if (!participant) valid = false;
-
   if (!age) valid = false;
   if (!device) valid = false;
   if (!musician) valid = false;
@@ -143,10 +145,17 @@ function validateIntro() {
     if (!years) valid = false;
   }
 
-  document.getElementById("startBtn").disabled = !valid;
+  const btn = document.getElementById("startBtn");
+  if (btn) btn.disabled = !valid;
 }
 
-// live validation
+// =========================
+// LIVE VALIDATION EVENTS
+// =========================
+
+window.addEventListener("load", validateIntro);
+
+document.getElementById("participant").addEventListener("input", validateIntro);
 document.getElementById("age").addEventListener("input", validateIntro);
 
 document.querySelectorAll('input[name="device"]').forEach(el =>
@@ -158,7 +167,6 @@ document.querySelectorAll('input[name="musician"]').forEach(el =>
 );
 
 document.getElementById("yearsPractice").addEventListener("input", validateIntro);
-
 
 // =========================
 // AUDIO FILES
@@ -234,7 +242,6 @@ async function submitTest() {
 
   const participant = document.getElementById("participant").value;
 
-  // DEMOGRAPHICS
   const age = document.getElementById("age").value;
 
   const device =
@@ -251,11 +258,10 @@ async function submitTest() {
     AGE: { answer: age, chiave: "demographics" },
     DEVICE: { answer: device, chiave: "demographics" },
     MUSICIAN: { answer: musician, chiave: "demographics" },
-    YEARS_PRACTICE: { answer: yearsPractice, chiave: "demographics" },
+    YEARS_PRACTICE: { answer: yearsPractice, chiave: "demographics" }
 
   };
 
-  // RATINGS
   audioFiles.forEach((file, index) => {
 
     const rating =
@@ -298,6 +304,9 @@ async function submitTest() {
 
     alert("FETCH ERROR");
   }
+}
+
+</script>
 }
 
 </script>
