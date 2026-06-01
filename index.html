@@ -51,9 +51,15 @@ audioFiles.forEach((file, index) => {
 
     <h3>Audio ${index + 1}</h3>
 
-    <audio controls controlsList="nodownload noplaybackrate noremoteplayback">
-  <source src="${file}" type="audio/wav">
-</audio>
+    <audio id="audio_${index}">
+      <source src="${file}" type="audio/wav">
+    </audio>
+
+    <button
+      type="button"
+      onclick="playAudio('audio_${index}')">
+      ▶ Listen
+    </button>
 
     <br><br>
 
@@ -81,6 +87,16 @@ audioFiles.forEach((file, index) => {
 
 });
 
+function playAudio(audioId) {
+
+  const audio =
+    document.getElementById(audioId);
+
+  audio.currentTime = 0;
+
+  audio.play();
+
+}
 // ======================================
 // SUBMIT
 // ======================================
