@@ -250,12 +250,17 @@ async function submitTest() {
   const yearsPractice =
     document.getElementById("yearsPractice")?.value || "";
 
+  const instrument =
+  document.getElementById("instrument")?.value || "";
+
   const responses = {
 
     AGE: { answer: age, chiave: "demographics" },
     DEVICE: { answer: device, chiave: "demographics" },
     MUSICIAN: { answer: musician, chiave: "demographics" },
+    INSTRUMENT: { answer: instrument, chiave: "demographics" },
     YEARS_PRACTICE: { answer: yearsPractice, chiave: "demographics" }
+    
 
   };
 
