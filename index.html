@@ -188,14 +188,12 @@ audioFiles.forEach((file, index) => {
 
   container.innerHTML += `
 
-    <h3>Audio ${index + 1}</h3>
-
     <audio id="audio_${index}">
       <source src="${file}" type="audio/wav">
     </audio>
 
     <button type="button" onclick="playAudio('audio_${index}')">
-      ▶ Listen
+      ▶ Audio ${index + 1}
     </button>
 
     <br><br>
