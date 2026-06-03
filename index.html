@@ -14,9 +14,7 @@
 
   <h3>Participant information</h3>
 
-  <h4>Pseudo</h4>
-
-  <label>ID:</label><br>
+  <label>Pseudo:</label><br>
   <input type="text" id="participant" placeholder="user001">
 
   <br><br>
@@ -66,6 +64,14 @@
 
 </div>
 
+<br>
+
+<button id="startBtn" onclick="startTest()" disabled>
+  Start Test
+</button>
+
+</div>
+
 <div id="testPage" style="display:none;">
 
   <hr>
@@ -95,17 +101,25 @@ function startTest() {
 
 function toggleInstrument(show) {
 
-  document.getElementById("instrumentDetails").style.display =
-    show ? "block" : "none";
+  const details =
+    document.getElementById("instrumentDetails");
+
+  details.style.display = show ? "block" : "none";
 
   if (!show) {
-    const y = document.getElementById("yearsPractice");
-    if (y) y.value = "";
+
+    const years =
+      document.getElementById("yearsPractice");
+
+    const instrument =
+      document.getElementById("instrument");
+
+    if (years) years.value = "";
+    if (instrument) instrument.value = "";
   }
 
   validateIntro();
 }
-
 // =========================
 // VALIDATION (ROBUST)
 // =========================
