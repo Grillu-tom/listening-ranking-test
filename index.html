@@ -112,26 +112,26 @@ function toggleInstrument(show) {
 
 function validateIntro() {
 
-  const participantEl = document.getElementById("participant");
-  const ageEl = document.getElementById("age");
-  const yearsEl = document.getElementById("yearsPractice");
-
-  const participant = participantEl ? participantEl.value : "";
-  const age = ageEl ? ageEl.value : "";
-  const years = yearsEl ? yearsEl.value : "";
+  const participant = document.getElementById("participant")?.value.trim() || "";
+  const age = document.getElementById("age")?.value || "";
+  const years = document.getElementById("yearsPractice")?.value || "";
+  const instrument = document.getElementById("instrument")?.value.trim() || "";
 
   const device = document.querySelector('input[name="device"]:checked');
   const musician = document.querySelector('input[name="musician"]:checked');
 
   let valid = true;
 
+  // champs obligatoires
   if (!participant) valid = false;
   if (!age) valid = false;
   if (!device) valid = false;
   if (!musician) valid = false;
 
+  // si musicien = oui → champs supplémentaires obligatoires
   if (musician?.value === "Yes") {
     if (!years) valid = false;
+    if (!instrument) valid = false;
   }
 
   const btn = document.getElementById("startBtn");
